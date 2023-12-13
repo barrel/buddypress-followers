@@ -276,12 +276,13 @@ function bp_follow_new_follow_email_notification( $args = '' ) {
 	$has_notified = empty( $has_notified ) ? array() : $has_notified;
 
 	// Already notified so don't send another email.
-	if ( in_array( $r['leader_id'], $has_notified, true ) ) {
+	if ( is_array( $has_notified) && in_array( $r['leader_id'], $has_notified, true ) ) {
 		return false;
 	}
 
 	// Not been notified before, update usermeta and continue to mail.
-	$has_notified[] = $r['leader_id'];
+	if (is_array($r['leader_id'])) $has_notified = $r['leader_id'];
+	else $has_notified = $r['leader_id'];
 	bp_update_user_meta( $r['follower_id'], 'bp_follow_has_notified', $has_notified );
 
 	$follower_name = wp_specialchars_decode( bp_core_get_user_displayname( $r['follower_id'] ), ENT_QUOTES );
